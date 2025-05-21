@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/dhanapal1410/Jenkins-terraform.git'
+                git branch: 'main', url: 'https://github.com/dhanapal1410/Jenkins-terraform.git'
             }
         }
 
@@ -54,5 +54,15 @@ pipeline {
             }
         }
     }
+
+    post {
+        failure {
+            echo 'Pipeline failed. Please check the logs above for details.'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+    }
 }
+
 
