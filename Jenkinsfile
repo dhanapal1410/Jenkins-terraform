@@ -4,7 +4,19 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git 'https://github.com/dhanapal1410/Jenkins-terraform.git'
+        git branch: 'main', url: 'https://github.com/dhanapal1410/Jenkins-terraform.git'
+      }
+    }
+
+    stage('Terraform Format Check') {
+      steps {
+        sh 'terraform fmt -check'
+      }
+    }
+
+    stage('Terraform Validate') {
+      steps {
+        sh 'terraform validate'
       }
     }
 
@@ -40,4 +52,6 @@ pipeline {
     }
   }
 }
+
+
 
