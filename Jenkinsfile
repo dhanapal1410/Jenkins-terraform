@@ -1,11 +1,6 @@
 pipeline {
   agent any
 
-  environment {
-    AWS_ACCESS_KEY_ID = credentials('aws-access-key')
-    AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
-  }
-
   stages {
     stage('Checkout') {
       steps {
@@ -15,21 +10,34 @@ pipeline {
 
     stage('Terraform Init') {
       steps {
-        sh 'terraform init'
+        withCredentials([
+          usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')
+        ]) {
+          sh 'terraform init'
+        }
       }
     }
 
     stage('Terraform Plan') {
       steps {
-        sh 'terraform plan'
+        withCredentials([
+          usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')
+        ]) {
+          sh 'terraform plan'
+        }
       }
     }
 
     stage('Terraform Apply') {
       steps {
         input message: 'Approve to apply?'
-        sh 'terraform apply -auto-approve'
+        withCredentials([
+          usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')
+        ]) {
+          sh 'terraform apply -auto-approve'
+        }
       }
     }
   }
 }
+
