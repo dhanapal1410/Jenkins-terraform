@@ -8,6 +8,16 @@ pipeline {
       }
     }
 
+    stage('Terraform Init') {
+      steps {
+        withCredentials([
+          usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')
+        ]) {
+          sh 'terraform init'
+        }
+      }
+    }
+
     stage('Terraform Format Check') {
       steps {
         sh 'terraform fmt -check'
@@ -17,16 +27,6 @@ pipeline {
     stage('Terraform Validate') {
       steps {
         sh 'terraform validate'
-      }
-    }
-
-    stage('Terraform Init') {
-      steps {
-        withCredentials([
-          usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')
-        ]) {
-          sh 'terraform init'
-        }
       }
     }
 
@@ -53,5 +53,4 @@ pipeline {
   }
 }
 
-
-
+  
